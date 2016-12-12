@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Back_End.Models;
+using Back_End.Database;
 
 namespace Back_End.Controllers
 {
@@ -12,6 +13,8 @@ namespace Back_End.Controllers
     // Inheriting from ApiController to implement the API.
     public class ActivityController : ApiController
     {
+        private ActivityTrackerContext _Database = new ActivityTrackerContext();
+
         // GET: /Activity/GetAll
         public List<Activity> GetAll()
         {
@@ -22,7 +25,7 @@ namespace Back_End.Controllers
             List<Activity> activityList = new List<Activity>();
             activityList.Add(testAct);
 
-            return activityList;
+            return _Database.Activities.ToList();
         }
 
         // GET: /Activity/Get

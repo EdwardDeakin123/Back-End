@@ -7,10 +7,12 @@ namespace Back_End.Models
     public class ActivityLog
     {
         public int ActivityLogId { get; set; }
-        public int ActivityId { get; set; }
-        public int UserId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
+        // These represent foreign keys. An ActivityLog object will return the associated User and Activity objects.
+        public virtual User User { get; set; }
+        public virtual Activity Activity { get; set; }
     }
 
     public class ActivityLogDbContext : DbContext

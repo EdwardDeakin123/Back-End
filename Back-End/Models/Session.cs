@@ -9,10 +9,12 @@ namespace Back_End.Models
     public class Session
     {
         public int SessionId { get; set; }
-        public int UserId { get; set; }
         public int DeviceId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime LastCheckin { get; set; }
+
+        // Set up the relationship to the User table.
+        public virtual User User { get; set; }
     }
 
     public class SessionDbContext : DbContext

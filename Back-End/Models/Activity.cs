@@ -3,14 +3,11 @@
 namespace Back_End.Models
 {
     // This class represents the Activity table in the database.
+    // All models were implemented with information from this guide:
+    // https://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/creating-an-entity-framework-data-model-for-an-asp-net-mvc-application
     public class Activity
     {
         public int ActivityId { get; set; }
         public string ActivityName { get; set; }
-    }
-
-    public class ActivityDbContext : DbContext
-    {
-        public DbSet<Activity> Activities { get; set; }
     }
 }
