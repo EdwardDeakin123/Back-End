@@ -2,6 +2,7 @@
 
 namespace Back_End.Models
 {
+    // This class represents the Activity table in the database.
     public class Activity
     {
         public int ActivityId { get; set; }
