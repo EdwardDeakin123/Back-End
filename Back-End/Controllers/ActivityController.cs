@@ -31,11 +31,8 @@ namespace Back_End.Controllers
         /// <returns>The Activity associated with the ID passed.</returns>
         public Activity Get(int activityId)
         {
-            Activity testAct = new Activity();
-            testAct.ActivityId = 0;
-            testAct.ActivityName = "Running";
-
-            return testAct;
+            // Get the element from the database.
+            return _Database.Activities.SingleOrDefault(act => act.ActivityId == activityId);
         }
     }
 }
