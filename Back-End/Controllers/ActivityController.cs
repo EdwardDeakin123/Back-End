@@ -19,6 +19,7 @@ namespace Back_End.Controllers
         /// GET: /Activity/GetAll
         /// </summary>
         /// <returns>A List containing all the activities stored in the database.</returns>
+        [Authorize]
         public List<Activity> GetAll()
         {
             return _Database.Activities.ToList();

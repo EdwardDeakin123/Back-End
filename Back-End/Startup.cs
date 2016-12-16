@@ -8,6 +8,10 @@ namespace Back_End
     {
         public void Configuration(IAppBuilder app)
         {
+            // Using token based authentication to manage access to the API.
+            // Tokens will be implemented using OWIN.
+            // Based this code off information on this website:
+            // http://www.developerhandbook.com/c-sharp/create-restful-api-authentication-using-web-api-jwt/
             ConfigureAuth(app);
         }
     }
