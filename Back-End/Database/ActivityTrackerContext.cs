@@ -16,7 +16,6 @@ namespace Back_End.Database
         // The models are given the singular name and tables the plural.
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
-        public DbSet<Session> Sessions { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

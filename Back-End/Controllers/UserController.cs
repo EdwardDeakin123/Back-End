@@ -1,17 +1,10 @@
 ﻿using Back_End.Database;
 using Back_End.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Owin;
-using Microsoft.Owin;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Host.SystemWeb;
 using Microsoft.Owin.Security;
 using System.Security.Claims;
 
@@ -38,6 +31,7 @@ namespace Back_End.Controllers
             //TODO: Encrypt the password.
             //TODO: Add a salt to the password.
             //TODO: Check for a user with this username before adding it to the database.
+            //TODO Use Any to get a boolean from the database.
             User newUser = new User { FirstName = firstname, LastName = lastname, Username = username, Password = password };
 
             System.Diagnostics.Debug.WriteLine("Adding a new user...");
