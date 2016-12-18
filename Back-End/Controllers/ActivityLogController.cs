@@ -46,6 +46,10 @@ namespace Back_End.Controllers
         /// <summary>
         /// POST: /ActivityLog/Add
         /// </summary>
+        /// <param name="userId">ID of the user for the activity log.</param>
+        /// <param name="activityId">ID of the activity for the activity log</param>
+        /// <param name="startTime">Start Time for this activity log.</param>
+        /// <param name="endTime">End Time for this activity log.</param>
         [HttpPost]
         public void Add(int userId, int activityId, DateTime startTime, DateTime endTime)
         {
