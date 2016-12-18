@@ -10,6 +10,8 @@ namespace Back_End.Controllers
     /// API Controller for Activity Model.
     /// </summary>
     // Inheriting from ApiController to implement the API.
+    // Mark this class as requiring authentication.
+    [Authorize]
     public class ActivityController : ApiController
     {
         // Access the ActivityTracker database.
@@ -19,7 +21,6 @@ namespace Back_End.Controllers
         /// GET: /Activity/GetAll
         /// </summary>
         /// <returns>A List containing all the activities stored in the database.</returns>
-        [Authorize]
         public List<Activity> GetAll()
         {
             return _Database.Activities.ToList();

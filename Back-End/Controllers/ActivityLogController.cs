@@ -13,6 +13,8 @@ namespace Back_End.Controllers
     /// API Controller for ActivityLog Model.
     /// </summary>
     // Inheriting from ApiController to implement the API.
+    // Mark this class as requiring authentication.
+    [Authorize]
     public class ActivityLogController : ApiController
     {
         // Access the ActivityTracker database.
@@ -39,6 +41,26 @@ namespace Back_End.Controllers
             // Get all elements in the database for this user.
             // Probably won't be used very much if at all. Should instead filter by date.
             return _Database.ActivityLogs.Where(log => log.User.UserId == userId).ToList();
+        }
+
+        /// <summary>
+        /// POST: /ActivityLog/Add
+        /// </summary>
+        [HttpPost]
+        public void Add(int userId, int activityId, DateTime startTime, DateTime endTime)
+        {
+            //TODO Verify that a valid activity and valid user have been passed.
+            User user = (User) _Database.Users.SingleOrDefault(usr => usr.UserId == userId);
+            Activity activity = (Activity)_Database.Activities.SingleOrDefault(act => act.ActivityId == activityId);
+
+            // Create a new ActivityLog entry in the database.
+            ActivityLog newLog = new ActivityLog { Activity = activity, User = user, StartTime = startTime, EndTime = endTime };
+
+            System.Diagnostics.Debug.WriteLine("Adding a new ActivityLog...");
+
+            // Add the ActivityLog to the database.
+            _Database.ActivityLogs.Add(newLog);
+            _Database.SaveChanges();
         }
     }
 }
