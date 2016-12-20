@@ -7,6 +7,7 @@ using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Security.Claims;
+using System.Net;
 
 namespace Back_End.Controllers
 {
@@ -25,13 +26,27 @@ namespace Back_End.Controllers
         // POST: /User/Register
         [HttpPost]
         [AllowAnonymous]
-        public void Register(string firstname, string lastname, string username, string password)
+        public HttpResponseMessage Register(string firstname, string lastname, string username, string password)
         {
             // Create the new User object.
             //TODO: Encrypt the password.
-            //TODO: Add a salt to the password.
-            //TODO: Check for a user with this username before adding it to the database.
-            //TODO Use Any to get a boolean from the database.
+
+            if (firstname == "" || lastname == "" || username == "" || password == "")
+            {
+                // If any of the parameters are empty, throw an error.
+                // TODO Maybe don't user forbidden status here.
+                System.Diagnostics.Debug.WriteLine("Registration failed!!!!! Empty Parameters.");
+                return Request.CreateResponse(HttpStatusCode.Forbidden, "Registration Failed - Empty Parameters.");
+            }
+
+            // Check if there is already a user with this username.
+            if(_Database.Users.Any(usr => usr.Username == username))
+            {
+                // TODO Maybe don't user forbidden status here.
+                System.Diagnostics.Debug.WriteLine("Registration failed!!!!! Username in use.");
+                return Request.CreateResponse(HttpStatusCode.Forbidden, "Registration Failed - Username in use.");
+            }
+
             User newUser = new User { FirstName = firstname, LastName = lastname, Username = username, Password = password };
 
             System.Diagnostics.Debug.WriteLine("Adding a new user...");
@@ -39,17 +54,25 @@ namespace Back_End.Controllers
             // Add the user to the database.
             _Database.Users.Add(newUser);
             _Database.SaveChanges();
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public void Login(string username, string password)
+        public HttpResponseMessage Login(string username, string password)
         {
-            //TODO Check for null strings.
-            //TODO Maybe create a UserManager to handle the validation.
+            if(username == "" || password == "")
+            {
+                // If username or password is empty, throw an error.
+                System.Diagnostics.Debug.WriteLine("Auth failed!!!!! Empty Auth.");
+                return Request.CreateResponse(HttpStatusCode.Forbidden, "Authentication Failed - Empty Username or Password");
+            }
+
+            // Get the user from the database.
             var user = _Database.Users.SingleOrDefault(usr => usr.Username == username);
 
-            if(user.Password == password)
+            if (user.Password == password)
             {
                 // The password is correct, proceed with creating a token.
                 // Used information from the following links to build the authentication system without using
@@ -66,11 +89,16 @@ namespace Back_End.Controllers
 
                 // Pass the claim Owin which will create a Token to authenticate the user.
                 Request.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, claims);
-                System.Diagnostics.Debug.WriteLine("Auth Success!!!!! Might be logged in now...");
+
+                // Authentication succeeded.
+                System.Diagnostics.Debug.WriteLine("Auth Success!!!!!");
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
             else
             {
+                // Send the Forbidden status code for failed authentication.
                 System.Diagnostics.Debug.WriteLine("Auth failed!!!!!");
+                return Request.CreateResponse(HttpStatusCode.Forbidden, "Authentication Failed");
             }
         }
 
