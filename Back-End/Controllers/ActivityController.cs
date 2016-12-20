@@ -11,7 +11,8 @@ namespace Back_End.Controllers
     /// </summary>
     // Inheriting from ApiController to implement the API.
     // Mark this class as requiring authentication.
-    [Authorize]
+    //TODO reenable auth after testing.
+    //[Authorize]
     public class ActivityController : ApiController
     {
         // Access the ActivityTracker database.

@@ -9,10 +9,11 @@ namespace Back_End
     {
         public void ConfigureAuth(IAppBuilder app)
         {
+            // This method configures the authentication in the app.
+            // Sets it to use Token based cookie authentication.
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/User/Login")
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
             });
         }
     }
