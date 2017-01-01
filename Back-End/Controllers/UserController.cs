@@ -60,19 +60,20 @@ namespace Back_End.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public HttpResponseMessage Login(string username, string password)
+        public HttpResponseMessage Login([FromBody] LoginRequest loginRequest)
         {
-            if(username == "" || password == "")
+            // Using FromBody so the parameters are pulled from the URL request body rather than the query string.
+            System.Diagnostics.Debug.WriteLine("Got username " + loginRequest.Username + " and password " + loginRequest.Password);
+
+            if(loginRequest.Username == "" || loginRequest.Password == "")
             {
                 // If username or password is empty, throw an error.
                 System.Diagnostics.Debug.WriteLine("Auth failed!!!!! Empty Auth.");
                 return Request.CreateResponse(HttpStatusCode.Forbidden, "Authentication Failed - Empty Username or Password");
             }
 
-            // Get the user from the database.
-            var user = _Database.Users.SingleOrDefault(usr => usr.Username == username);
-
-            if (user.Password == password)
+            // Check if there is a user in the database with this username and password.
+            if (_Database.Users.Any(usr => usr.Username == loginRequest.Username && usr.Password == loginRequest.Password))
             {
                 // The password is correct, proceed with creating a token.
                 // Used information from the following links to build the authentication system without using
@@ -83,7 +84,7 @@ namespace Back_End.Controllers
                 // Create a claim that can be passed to the authorization manager.
                 var claims = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, username)
+                    new Claim(ClaimTypes.Name, loginRequest.Username)
                 },
                 DefaultAuthenticationTypes.ApplicationCookie);
 

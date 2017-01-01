@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Routing;
 
 namespace Back_End
 {
@@ -14,9 +16,16 @@ namespace Back_End
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute(
+            /*config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional },
+                constraints: new { id = @"\d+" }
+            );*/
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApiWithAction", 
+                routeTemplate: "api/{controller}/{action}/{id}", 
                 defaults: new { id = RouteParameter.Optional }
             );
         }
