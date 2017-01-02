@@ -1,5 +1,6 @@
 ﻿using Back_End.Database;
 using Back_End.Models;
+using Back_End.Requests;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -72,8 +73,11 @@ namespace Back_End.Controllers
                 return Request.CreateResponse(HttpStatusCode.Forbidden, "Authentication Failed - Empty Username or Password");
             }
 
-            // Check if there is a user in the database with this username and password.
-            if (_Database.Users.Any(usr => usr.Username == loginRequest.Username && usr.Password == loginRequest.Password))
+            // Get the user from the database.
+            User user = _Database.Users.Where(usr => usr.Username == loginRequest.Username && usr.Password == loginRequest.Password).FirstOrDefault();
+
+            // Check that the user returned a valid user.
+            if (user != default(User))
             {
                 // The password is correct, proceed with creating a token.
                 // Used information from the following links to build the authentication system without using
@@ -84,7 +88,8 @@ namespace Back_End.Controllers
                 // Create a claim that can be passed to the authorization manager.
                 var claims = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, loginRequest.Username)
+                    new Claim(ClaimTypes.Name, loginRequest.Username),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
                 },
                 DefaultAuthenticationTypes.ApplicationCookie);
 

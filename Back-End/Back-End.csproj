@@ -187,7 +187,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="LoginRequest.cs" />
+    <Compile Include="Requests\ActivityLogRequest.cs" />
+    <Compile Include="Requests\LoginRequest.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\ActivityLog.cs" />
     <Compile Include="Models\User.cs" />

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using Back_End.Requests;
 
 namespace Back_End.Controllers
 {
@@ -34,12 +36,13 @@ namespace Back_End.Controllers
         /// <summary>
         /// GET: /ActivityLog/GetByUser
         /// </summary>
-        /// <param name="userId">The ID of a User</param>
-        /// <returns>A list of activity logs associated with this user.</returns>
-        public List<ActivityLog> GetByUser(int userId)
+        /// <returns>A list of activity logs associated with the currently logged in user.</returns>
+        public List<ActivityLog> GetByUser()
         {
             // Get all elements in the database for this user.
             // Probably won't be used very much if at all. Should instead filter by date.
+            int userId = int.Parse(User.Identity.GetUserId());
+
             return _Database.ActivityLogs.Where(log => log.User.UserId == userId).ToList();
         }
 
@@ -51,14 +54,17 @@ namespace Back_End.Controllers
         /// <param name="startTime">Start Time for this activity log.</param>
         /// <param name="endTime">End Time for this activity log.</param>
         [HttpPost]
-        public void Add(int userId, int activityId, DateTime startTime, DateTime endTime)
+        public void Add([FromBody] ActivityLogRequest activityLogRequest)
         {
+            // Get the UserId of the logged in user.
+            int userId = int.Parse(User.Identity.GetUserId());
+
             //TODO Verify that a valid activity and valid user have been passed.
             User user = (User) _Database.Users.SingleOrDefault(usr => usr.UserId == userId);
-            Activity activity = (Activity)_Database.Activities.SingleOrDefault(act => act.ActivityId == activityId);
+            Activity activity = (Activity)_Database.Activities.SingleOrDefault(act => act.ActivityId == activityLogRequest.ActivityId);
 
             // Create a new ActivityLog entry in the database.
-            ActivityLog newLog = new ActivityLog { Activity = activity, User = user, StartTime = startTime, EndTime = endTime };
+            ActivityLog newLog = new ActivityLog { Activity = activity, User = user, StartTime = activityLogRequest.StartTime, EndTime = activityLogRequest.EndTime };
 
             System.Diagnostics.Debug.WriteLine("Adding a new ActivityLog...");
 
