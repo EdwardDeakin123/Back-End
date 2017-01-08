@@ -47,6 +47,23 @@ namespace Back_End.Controllers
         }
 
         /// <summary>
+        /// GET: /ActivityLog/GetByDate
+        /// </summary>
+        /// <returns>A list of activity logs associated with the currently logged in user on a particular date.</returns>
+        public List<ActivityLog> GetByDate(DateTime date)
+        {
+            // Get all elements in the database for this user.
+            // Probably won't be used very much if at all. Should instead filter by date.
+            int userId = int.Parse(User.Identity.GetUserId());
+
+            // Get the following day.
+            DateTime nextDate = date.AddDays(1);
+
+            // Get all activity logs on this date.
+            return _Database.ActivityLogs.Where(log => log.User.UserId == userId && log.StartTime >= date && log.EndTime < nextDate).ToList();
+        }
+
+        /// <summary>
         /// POST: /ActivityLog/Add
         /// </summary>
         /// <param name="userId">ID of the user for the activity log.</param>
@@ -54,7 +71,7 @@ namespace Back_End.Controllers
         /// <param name="startTime">Start Time for this activity log.</param>
         /// <param name="endTime">End Time for this activity log.</param>
         [HttpPost]
-        public void Add([FromBody] ActivityLogRequest activityLogRequest)
+        public HttpResponseMessage Add([FromBody] ActivityLogRequest activityLogRequest)
         {
             // Get the UserId of the logged in user.
             int userId = int.Parse(User.Identity.GetUserId());
@@ -71,6 +88,56 @@ namespace Back_End.Controllers
             // Add the ActivityLog to the database.
             _Database.ActivityLogs.Add(newLog);
             _Database.SaveChanges();
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpPut]
+        public HttpResponseMessage Update([FromBody] ActivityLogUpdateRequest activityLogUpdateRequest)
+        {
+            // Get the UserId of the logged in user.
+            int userId = int.Parse(User.Identity.GetUserId());
+
+            // Get the ActivityLog from the database.
+            ActivityLog activityLog = (ActivityLog)_Database.ActivityLogs.SingleOrDefault(actLog => actLog.ActivityLogId == activityLogUpdateRequest.ActivityLogId);
+
+            // Verify that the current user is the same one associated with this activityLog.
+            if(activityLog.User.UserId != userId)
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden, "This log doesn't belong to the current user.");
+            }
+
+            // Update the start and end times.
+            activityLog.StartTime = activityLogUpdateRequest.StartTime;
+            activityLog.EndTime = activityLogUpdateRequest.EndTime;
+
+            // Commit the changes to the database.
+            _Database.SaveChanges();
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage Delete(int activityLogId)
+        {
+            // Get the UserId of the logged in user.
+            int userId = int.Parse(User.Identity.GetUserId());
+
+            // Get the ActivityLog from the database.
+            ActivityLog activityLog = (ActivityLog)_Database.ActivityLogs.SingleOrDefault(actLog => actLog.ActivityLogId == activityLogId);
+
+            // Verify that the current user is the same one associated with this activityLog.
+            if (activityLog.User.UserId != userId)
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden, "This log doesn't belong to the current user.");
+            }
+
+            _Database.ActivityLogs.Remove(activityLog);
+
+            // Commit the changes to the database.
+            _Database.SaveChanges();
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

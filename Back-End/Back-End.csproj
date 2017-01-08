@@ -188,11 +188,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Requests\ActivityLogRequest.cs" />
+    <Compile Include="Requests\ActivityLogUpdateRequest.cs" />
     <Compile Include="Requests\LoginRequest.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\ActivityLog.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\RegisterRequest.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -27,28 +27,27 @@ namespace Back_End.Controllers
         // POST: /User/Register
         [HttpPost]
         [AllowAnonymous]
-        public HttpResponseMessage Register(string firstname, string lastname, string username, string password)
+        public HttpResponseMessage Register(RegisterRequest registerRequest)
         {
             // Create the new User object.
             //TODO: Encrypt the password.
 
-            if (firstname == "" || lastname == "" || username == "" || password == "")
+            if (registerRequest.FirstName == "" || registerRequest.LastName == "" || registerRequest.Username == "" || registerRequest.Password == "")
             {
                 // If any of the parameters are empty, throw an error.
                 // TODO Maybe don't user forbidden status here.
-                System.Diagnostics.Debug.WriteLine("Registration failed!!!!! Empty Parameters.");
                 return Request.CreateResponse(HttpStatusCode.Forbidden, "Registration Failed - Empty Parameters.");
             }
 
             // Check if there is already a user with this username.
-            if(_Database.Users.Any(usr => usr.Username == username))
+            if(_Database.Users.Any(usr => usr.Username == registerRequest.Username))
             {
                 // TODO Maybe don't user forbidden status here.
                 System.Diagnostics.Debug.WriteLine("Registration failed!!!!! Username in use.");
-                return Request.CreateResponse(HttpStatusCode.Forbidden, "Registration Failed - Username in use.");
+                return Request.CreateResponse(HttpStatusCode.Conflict, "Registration Failed - Username in use.");
             }
 
-            User newUser = new User { FirstName = firstname, LastName = lastname, Username = username, Password = password };
+            User newUser = new User { FirstName = registerRequest.FirstName, LastName = registerRequest.LastName, Username = registerRequest.Username, Password = registerRequest.Password };
 
             System.Diagnostics.Debug.WriteLine("Adding a new user...");
 
@@ -104,7 +103,7 @@ namespace Back_End.Controllers
             {
                 // Send the Forbidden status code for failed authentication.
                 System.Diagnostics.Debug.WriteLine("Auth failed!!!!!");
-                return Request.CreateResponse(HttpStatusCode.Forbidden, "Authentication Failed");
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Authentication Failed");
             }
         }
 
