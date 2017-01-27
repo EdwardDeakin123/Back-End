@@ -50,17 +50,18 @@ namespace Back_End.Controllers
         /// GET: /ActivityLog/GetByDate
         /// </summary>
         /// <returns>A list of activity logs associated with the currently logged in user on a particular date.</returns>
-        public List<ActivityLog> GetByDate(DateTime date)
+        public List<ActivityLog> GetByDate(DateTime startDate, DateTime endDate)
         {
             // Get all elements in the database for this user.
             // Probably won't be used very much if at all. Should instead filter by date.
             int userId = int.Parse(User.Identity.GetUserId());
 
-            // Get the following day.
-            DateTime nextDate = date.AddDays(1);
+            // We only really deal with the entire day and ignore the times, so adjust start and end so they go from 12:00am - 11:59pm
+            DateTime actStart = new DateTime(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0);
+            DateTime actEnd = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             // Get all activity logs on this date.
-            return _Database.ActivityLogs.Where(log => log.User.UserId == userId && log.StartTime >= date && log.EndTime < nextDate).ToList();
+            return _Database.ActivityLogs.Where(log => log.User.UserId == userId && log.StartTime >= actStart && log.EndTime <= actEnd).ToList();
         }
 
         /// <summary>

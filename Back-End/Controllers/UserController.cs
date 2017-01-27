@@ -62,15 +62,15 @@ namespace Back_End.Controllers
         [AllowAnonymous]
         public HttpResponseMessage Login([FromBody] LoginRequest loginRequest)
         {
-            // Using FromBody so the parameters are pulled from the URL request body rather than the query string.
-            System.Diagnostics.Debug.WriteLine("Got username " + loginRequest.Username + " and password " + loginRequest.Password);
-
-            if(loginRequest.Username == "" || loginRequest.Password == "")
+            if (loginRequest == null || loginRequest.Username == "" || loginRequest.Password == "")
             {
                 // If username or password is empty, throw an error.
                 System.Diagnostics.Debug.WriteLine("Auth failed!!!!! Empty Auth.");
                 return Request.CreateResponse(HttpStatusCode.Forbidden, "Authentication Failed - Empty Username or Password");
             }
+
+            // Using FromBody so the parameters are pulled from the URL request body rather than the query string.
+            System.Diagnostics.Debug.WriteLine("Got username " + loginRequest.Username + " and password " + loginRequest.Password);
 
             // Get the user from the database.
             User user = _Database.Users.Where(usr => usr.Username == loginRequest.Username && usr.Password == loginRequest.Password).FirstOrDefault();
