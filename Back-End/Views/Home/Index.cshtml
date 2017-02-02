@@ -11,8 +11,53 @@
     <title>Index</title>
 </head>
 <body>
-    <div>
-        There is currently nothing here. Use the API instead.
+    @{
+        ViewBag.Title = "Export";
+    }
+    @model List<Back_End.Models.ActivityLog>
+    <h2>
+        Activity Logs
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Start Time  
+                </th>
+                <th>
+                    End Time
+                </th>
+                <th>
+                    User
+                </th>
+                <th>
+                    Activity
+                </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.StartTime
+                </td>
+                <td>
+                    @item.EndTime
+            </td>
+            <td>
+                @item.User.Username
+        </td>
+        <td>
+            @item.Activity.ActivityName
+        </td>
+    </tr>
+        }
+    </table>
+    <div class="ExportSection">
+        @Html.ActionLink("Export to Excel", "ExportClientsListToCSV")
+       
+
     </div>
 </body>
 </html>
