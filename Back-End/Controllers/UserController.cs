@@ -107,9 +107,11 @@ namespace Back_End.Controllers
             }
         }
 
+        [HttpPost]
+        [AllowAnonymous]
         public void Logout()
         {
-            Request.GetOwinContext().Authentication.SignOut();
+            Request.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
         }
     }
 }

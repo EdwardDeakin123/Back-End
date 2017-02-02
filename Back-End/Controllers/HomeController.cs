@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Back_End.Models;
+using Back_End.Database;
+using System.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,8 +13,6 @@ namespace Back_End.Controllers
     {
        private ActivityTrackerContext _Database = new ActivityTrackerContext();
 
-       
-        
         public List<ActivityLog> GetAll2()
         {
             return _Database.ActivityLogs.ToList();
